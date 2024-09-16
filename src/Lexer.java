@@ -56,54 +56,50 @@ public class Lexer {
      */
 
     public ArrayList<Token> getAllTokens(String fileName) throws IOException {
+        this.fileName = fileName;
         //TODO: place your code here for lexing file
-        Lexer lines = new Lexer(fileName);
         ArrayList<Token> tokens = new ArrayList<>();
-        while (index < Files.lines(Paths.get(fileName)).count()) {
-            StringBuilder value = new StringBuilder();
-            String type = "";
-            char ch = ' ';
-
-          for(int i =0;i <buffer.length();i++) {
-              value = new StringBuilder();
-              boolean foundAlpha = buffer.charAt(0) > (char) 64 && buffer.charAt(0) < (char) 91 || buffer.charAt(0) > (char) 96 && buffer.charAt(0) < (char) 122;
-              boolean foundInt = buffer.charAt(0) > (char) 47 && buffer.charAt(0) < (char) 59;
-              boolean foundAssignOp = buffer.charAt(i) == '=';
-              boolean foundAddOp = buffer.charAt(i) == '+';
-
-              for (int j = 0;j<buffer.length();j++) {
-                  if (foundAlpha && buffer.charAt(j) != '=' && buffer.charAt(j) != '+') {
-                  value.append(buffer.charAt(j));
-                  type = IDTOKEN;
-                  if(j==buffer.length()-1) {
-                      System.out.println(tokens.get(i).toString());}
-                      i++;
-                  }
-                   else if (foundInt && buffer.charAt(j) != '=' && buffer.charAt(j) != '+') {
-                      value.append(buffer.charAt(j));
-                      type = INTTOKEN;
-                      if(j==buffer.length()-1) {
-                          System.out.println(tokens.get(i).toString());
-                          i++;
-                      }
-                   }else {break;}
-              }  if (foundAssignOp ) {
-                  value = new StringBuilder();
-
-                  value = new StringBuilder("=");
-                  type = ASSMTTOKEN;
-                  System.out.println(value.toString());
-              } else if (foundAddOp  ) {
-                  value = new StringBuilder();
-                  value = new StringBuilder("+");
-                  type = PLUSTOKEN;
-                  System.out.println(tokens.get(i).toString());
+        StringBuilder value = new StringBuilder();
+        Lexer obj = new Lexer(fileName);
+       String buffer = obj.buffer;
+        while (index < buffer.length()) {
+            char c = buffer.charAt(index);
+            if(Character.isWhitespace(c)){
+                index++;
+                continue;
+            }
+          if(Character.isLetter(c)){
+              value.setLength(0);
+              while (index < buffer.length() && Character.isLetterOrDigit(buffer.charAt(index))) {
+                  value.append(c);
+                  index++;
               }
-              tokens.add(new Token(value.toString(), type));
-
+              tokens.add(new Token(value.toString(),IDTOKEN));
+              continue;
           }
-            index++;
+          if(Character.isDigit(c)){
+              value.setLength(0);
+              while (index < buffer.length() && Character.isDigit(buffer.charAt(index))) {
+                  value.append(c);
+                  index++;
+              }
+              tokens.add(new Token(value.toString(),INTTOKEN));
+              continue;
+          }
+          if(c == '='){
+              tokens.add(new Token("=",ASSMTTOKEN));
+              index++;
+              continue;
+          }
+            if(c == '+'){
+                tokens.add(new Token("+",PLUSTOKEN));
+                index++;
+                continue;
+            }
+
         }
+        tokens.add(new Token("", EOFTOKEN));  // Add EOF token at the end
+        index++;
         return tokens; // don't forget to change the return statement
     }
 
@@ -127,9 +123,10 @@ public class Lexer {
 
             fileName=args[0];
         }
-        Lexer lexer = new Lexer(fileName);
+        Lexer lexer = new Lexer("test.txt");
         // just print out the text from the file
         lexer.getAllTokens("test.txt");
+        System.out.println(lexer.getAllTokens("test.txt").get(0));
         System.out.println(lexer.buffer);
         // here is where you'll call getAllTokens
 
