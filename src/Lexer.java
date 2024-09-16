@@ -58,7 +58,7 @@ public class Lexer {
     public ArrayList<Token> getAllTokens(String fileName) throws IOException {
         this.fileName = fileName;
         //TODO: place your code here for lexing file
-        ArrayList<Token> tokens = new ArrayList<>();
+        ArrayList<Token> tokens = new ArrayList<>(23);
         StringBuilder value = new StringBuilder();
         Lexer obj = new Lexer(fileName);
        String buffer = obj.buffer;
@@ -123,10 +123,13 @@ public class Lexer {
 
             fileName=args[0];
         }
+      ArrayList<Token> tokens = new ArrayList<>();
         Lexer lexer = new Lexer("test.txt");
+        tokens = lexer.getAllTokens("test.txt");
         // just print out the text from the file
-        lexer.getAllTokens("test.txt");
-        System.out.println(lexer.getAllTokens("test.txt").get(0));
+        for (Token token : tokens) {
+            System.out.println(token);
+        }
         System.out.println(lexer.buffer);
         // here is where you'll call getAllTokens
 
