@@ -28,8 +28,7 @@ public class Lexer {
      * call getInput to get the file data into our buffer
      * @param fileName the file we open
      */
-    public Lexer(String fileName) {
-      this.fileName = fileName;
+    public Lexer(String fileName) {;
         getInput(fileName);
     }
 
@@ -56,7 +55,6 @@ public class Lexer {
      */
 
     public ArrayList<Token> getAllTokens(String fileName) throws IOException {
-        this.fileName = fileName;
         //TODO: place your code here for lexing file
         ArrayList<Token> tokens = new ArrayList<>(23);
         StringBuilder value = new StringBuilder();
@@ -71,7 +69,7 @@ public class Lexer {
           if(Character.isLetter(c)){
               value.setLength(0);
               while (index < buffer.length() && Character.isLetterOrDigit(buffer.charAt(index))) {
-                  value.append(c);
+                  value.append(buffer.charAt(index));
                   index++;
               }
               tokens.add(new Token(value.toString(),IDTOKEN));
@@ -80,7 +78,7 @@ public class Lexer {
           if(Character.isDigit(c)){
               value.setLength(0);
               while (index < buffer.length() && Character.isDigit(buffer.charAt(index))) {
-                  value.append(c);
+                  value.append(buffer.charAt(index));
                   index++;
               }
               tokens.add(new Token(value.toString(),INTTOKEN));
