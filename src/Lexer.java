@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -53,51 +54,50 @@ public class Lexer {
      * Return all the token in the file
      * @return ArrayList of Token
      */
-
+//return the next token
+public Token getNextToken() {
+    StringBuilder value = new StringBuilder();
+   Token token = new Token("","");
+   char c = buffer.charAt(index);
+    if (Character.isWhitespace(c)) {
+        index++;
+    }
+    else if (Character.isLetter(c)) {
+        value.setLength(0);
+        while (index < buffer.length() && Character.isLetterOrDigit(buffer.charAt(index))) {
+            value.append(buffer.charAt(index));
+            index++;
+        }
+        token = new Token(IDTOKEN,value.toString());
+    }
+   else if (Character.isDigit(c)) {
+        value.setLength(0);
+        while (index < buffer.length() && Character.isDigit(buffer.charAt(index))) {
+            value.append(buffer.charAt(index));
+            index++;
+        }
+        token = new Token(INTTOKEN,value.toString());
+    }
+   else if (c == '=') {
+        token = new Token(ASSMTTOKEN,"=");
+        index++;
+    }
+    else if (c == '+') {
+        token = new Token(PLUSTOKEN,"+");
+        index++;
+    }
+   else{ token= new Token(EOFTOKEN,"") ;// Add EOF token at the end
+    index++;
+   }
+    return token;
+}
+    //calls getsNextToken and shows all the tokens
     public ArrayList<Token> getAllTokens(String fileName) throws IOException {
         //TODO: place your code here for lexing file
         ArrayList<Token> tokens = new ArrayList<>(23);
-        StringBuilder value = new StringBuilder();
-        Lexer obj = new Lexer(fileName);
-       String buffer = obj.buffer;
-        while (index < buffer.length()) {
-            char c = buffer.charAt(index);
-            if(Character.isWhitespace(c)){
-                index++;
-                continue;
-            }
-          if(Character.isLetter(c)){
-              value.setLength(0);
-              while (index < buffer.length() && Character.isLetterOrDigit(buffer.charAt(index))) {
-                  value.append(buffer.charAt(index));
-                  index++;
-              }
-              tokens.add(new Token(value.toString(),IDTOKEN));
-              continue;
-          }
-          if(Character.isDigit(c)){
-              value.setLength(0);
-              while (index < buffer.length() && Character.isDigit(buffer.charAt(index))) {
-                  value.append(buffer.charAt(index));
-                  index++;
-              }
-              tokens.add(new Token(value.toString(),INTTOKEN));
-              continue;
-          }
-          if(c == '='){
-              tokens.add(new Token("=",ASSMTTOKEN));
-              index++;
-              continue;
-          }
-            if(c == '+'){
-                tokens.add(new Token("+",PLUSTOKEN));
-                index++;
-                continue;
-            }
-
+        while (index <buffer.length() ) {
+            tokens.add(getNextToken());
         }
-        tokens.add(new Token("", EOFTOKEN));  // Add EOF token at the end
-        index++;
         return tokens; // don't forget to change the return statement
     }
 
@@ -126,11 +126,15 @@ public class Lexer {
         tokens = lexer.getAllTokens("test.txt");
         // just print out the text from the file
         for (Token token : tokens) {
-            System.out.println(token);
+            if (!Objects.equals(token.type, " ")) {
+                System.out.println(token);
+            }
         }
+        System.out.println(tokens.get(1));
         System.out.println(lexer.buffer);
         // here is where you'll call getAllTokens
 
     }
 }
+
 	
