@@ -1,6 +1,7 @@
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public class LexerTest {
 
     @Test
-    public void test(){
+    public void test() throws IOException {
         Lexer lexer = new Lexer("test.txt");
         ArrayList<Token> tokens = lexer.getAllTokens();
         String actual = stringifyListOfToken(tokens);
@@ -33,7 +34,7 @@ public class LexerTest {
 
 
     @Test
-    public void testExpectingAssignOp(){
+    public void testExpectingAssignOp() throws IOException {
         Lexer lexer = new Lexer("testExpectingAssignOp.txt");
         ArrayList<Token> tokens = lexer.getAllTokens();
         String actual = stringifyListOfToken(tokens);
@@ -51,7 +52,7 @@ public class LexerTest {
 
 
     @Test
-    public void testExpectingIdOrInt2(){
+    public void testExpectingIdOrInt2() throws IOException {
         Lexer lexer = new Lexer("testExpectingIdOrInt2.txt");
         ArrayList<Token> tokens = lexer.getAllTokens();
         String actual = stringifyListOfToken(tokens);
@@ -69,7 +70,7 @@ public class LexerTest {
 
 
     @Test
-    public void testMultiplePlus(){
+    public void testMultiplePlus() throws IOException {
         Lexer lexer = new Lexer("testMultiplePlus.txt");
         ArrayList<Token> tokens = lexer.getAllTokens();
         String actual = stringifyListOfToken(tokens);
@@ -95,7 +96,7 @@ public class LexerTest {
 
 
     @Test
-    public void testWhitespace(){
+    public void testWhitespace() throws IOException {
         Lexer lexer = new Lexer("testWhitespace.txt");
         ArrayList<Token> tokens = lexer.getAllTokens();
         String actual = stringifyListOfToken(tokens);
@@ -117,7 +118,7 @@ public class LexerTest {
 
 
     @Test
-    public void testExpectingId2(){
+    public void testExpectingId2() throws IOException {
         Lexer lexer = new Lexer("testExpectingId2.txt");
         ArrayList<Token> tokens = lexer.getAllTokens();
         String actual = stringifyListOfToken(tokens);

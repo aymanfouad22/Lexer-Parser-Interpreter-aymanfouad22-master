@@ -19,6 +19,7 @@ public class Lexer {
 
     String buffer;
     int index = 0;
+    StringBuilder builder = new StringBuilder();
     public static final String INTTOKEN="INT";
     public static final String IDTOKEN="ID";
     public static final String ASSMTTOKEN="ASSMT";
@@ -51,63 +52,86 @@ public class Lexer {
         }
     }
     //Detects the identifier token and returns it in the token object
-private Token getIdentifier(){
-            StringBuilder value = new StringBuilder();
-    while (index < buffer.length() && Character.isLetterOrDigit(buffer.charAt(index))) {
-        value.append(buffer.charAt(index));
-        index++;
-    }
-   return token = new Token(IDTOKEN,value.toString());
-}
-//Detects the integer token and returns it
-private  Token getInteger(){
+    private Token getIdentifier() {
         StringBuilder value = new StringBuilder();
+        // Read while we have letters or digits
+        while (index < buffer.length() && Character.isLetterOrDigit(buffer.charAt(index))) {
+            value.append(buffer.charAt(index));
+            index++;
+        }
+        return new Token(IDTOKEN, value.toString());
+    }
+//Detects the integer token and returns it
+private Token getInteger() {
+    StringBuilder value = new StringBuilder();
+    // Read while we have digits
     while (index < buffer.length() && Character.isDigit(buffer.charAt(index))) {
         value.append(buffer.charAt(index));
         index++;
     }
-   return  token = new Token(INTTOKEN,value.toString());
+    return new Token(INTTOKEN, value.toString());
 }
     /**
      * Return all the token in the file
      * @return ArrayList of Token
      */
 //Returns the next token from the buffer
-public Token getNextToken() {
-    StringBuilder value = new StringBuilder();
-   char c = buffer.charAt(index);
-    if (Character.isWhitespace(c)) {
-        index++;
+    public Token getNextToken() {
+        if (index >= buffer.length()) {
+            return new Token(EOFTOKEN, "-");
+        }
+
+        char c = buffer.charAt(index);
+
+        // Skip whitespace
+        while (Character.isWhitespace(c)) {
+            index++;
+            if (index >= buffer.length()) {
+                return new Token(EOFTOKEN, "-");
+            }
+            c = buffer.charAt(index);
+        }
+
+        // Check for identifier (letters and digits)
+        if (Character.isLetter(c)) {
+            return getIdentifier();  // this method should handle advancing the index
+        }
+        // Check for integer
+        else if (Character.isDigit(c)) {
+            return getInteger(); // this method should handle advancing the index
+        }
+        // Check for assignment token (=)
+        else if (c == '=') {
+            index++;  // Move index forward
+            return new Token(ASSMTTOKEN, "=");
+        }
+        // Check for plus token (+)
+        else if (c == '+') {
+            index++;  // Move index forward
+            return new Token(PLUSTOKEN, "+");
+        }
+        // For any other character, skip and return EOF if no valid token
+        else {
+            index++;  // Move index forward to avoid infinite loop on invalid character
+            return getNextToken(); // Continue scanning for next token
+        }
     }
-    else if (Character.isLetter(c)) {
-        value.setLength(0);
-      this.getIdentifier();
-    }
-   else if (Character.isDigit(c)) {
-        value.setLength(0);
-        this.getInteger();
-    }
-   else if (c == '=') {
-        token = new Token(ASSMTTOKEN,"=");
-        index++;
-    }
-    else if (c == '+') {
-        token = new Token(PLUSTOKEN,"+");
-        index++;
-    }
-   else{ token= new Token(EOFTOKEN,"") ;// Add EOF token at the end
-    index++;
-   }
-    return token;
-}
+
+
+
     //calls getsNextToken and store all the tokens in an array
-    public ArrayList<Token> getAllTokens(String fileName) throws IOException {
+    public ArrayList<Token> getAllTokens() throws IOException {
         //TODO: place your code here for lexing file
         ArrayList<Token> tokens = new ArrayList<>(23);
-        while (index <buffer.length() ) {
-            tokens.add(getNextToken());
+        Token nextToken = getNextToken();
+
+        while (!Objects.equals(nextToken.type, EOFTOKEN)) {
+            tokens.add(nextToken);
+            nextToken = getNextToken();
         }
-        return tokens; // don't forget to change the return statement
+tokens.add(new Token(EOFTOKEN,"-"));
+        return tokens;
+     // don't forget to change the return statement
     }
 
 
@@ -132,7 +156,7 @@ public Token getNextToken() {
         }
       ArrayList<Token> tokens = new ArrayList<>();
         Lexer lexer = new Lexer("test.txt");
-        tokens = lexer.getAllTokens("test.txt");
+        tokens = lexer.getAllTokens();
         // just print out the text from the file
         for (Token token : tokens) {
 
@@ -140,9 +164,11 @@ public Token getNextToken() {
 
         }
         System.out.println(lexer.buffer);
+        System.out.println(lexer.builder.toString());
         // here is where you'll call getAllTokens
 
     }
 }
+
 
 	
