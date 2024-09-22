@@ -52,4 +52,7 @@ public class Parser {
     public String getLineNumber(){
         return "";
     }
+    public String toString() {
+        return "Tokens: " + tokens.toString() + "\nIdentifiers: " + idTable.toString();
+    }
 }
