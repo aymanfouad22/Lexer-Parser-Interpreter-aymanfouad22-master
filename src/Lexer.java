@@ -25,8 +25,9 @@ public class Lexer {
     public static final String ASSMTTOKEN="ASSMT";
     public static final String PLUSTOKEN="PLUS";
     public static final String EOFTOKEN="EOF";
-    Token token = new Token(" "," ");
+    Token token = new Token(" "," ",1);
     public String fileName;
+    private int currentLine = 1;
     /**
      * call getInput to get the file data into our buffer
      * @param fileName the file we open
@@ -59,7 +60,7 @@ public class Lexer {
             value.append(buffer.charAt(index));
             index++;
         }
-        return new Token(IDTOKEN, value.toString());
+        return new Token(IDTOKEN, value.toString(),currentLine);
     }
 //Detects the integer token and returns it
 private Token getInteger() {
@@ -69,7 +70,7 @@ private Token getInteger() {
         value.append(buffer.charAt(index));
         index++;
     }
-    return new Token(INTTOKEN, value.toString());
+    return new Token(INTTOKEN, value.toString(),currentLine);
 }
     /**
      * Return all the token in the file
@@ -78,7 +79,7 @@ private Token getInteger() {
 //Returns the next token from the buffer
     public Token getNextToken() {
         if (index >= buffer.length()) {
-            return new Token(EOFTOKEN, "-");
+            return new Token(EOFTOKEN, "-",currentLine);
         }
 
         char c = buffer.charAt(index);
@@ -87,7 +88,7 @@ private Token getInteger() {
         while (Character.isWhitespace(c)) {
             index++;
             if (index >= buffer.length()) {
-                return new Token(EOFTOKEN, "-");
+                return new Token(EOFTOKEN, "-",currentLine);
             }
             c = buffer.charAt(index);
         }
@@ -103,12 +104,12 @@ private Token getInteger() {
         // Check for assignment token (=)
         else if (c == '=') {
             index++;  // Move index forward
-            return new Token(ASSMTTOKEN, "=");
+            return new Token(ASSMTTOKEN, "=",currentLine);
         }
         // Check for plus token (+)
         else if (c == '+') {
             index++;  // Move index forward
-            return new Token(PLUSTOKEN, "+");
+            return new Token(PLUSTOKEN, "+",currentLine);
         }
         // For any other character, skip and return EOF if no valid token
         else {
@@ -127,9 +128,14 @@ private Token getInteger() {
 
         while (!Objects.equals(nextToken.type, EOFTOKEN)) {
             tokens.add(nextToken);
+            currentLine++;
             nextToken = getNextToken();
+
         }
-tokens.add(new Token(EOFTOKEN,"-"));
+tokens.add(new Token(EOFTOKEN,"-",currentLine));
+
+
+
         return tokens;
      // don't forget to change the return statement
     }
@@ -161,14 +167,16 @@ tokens.add(new Token(EOFTOKEN,"-"));
         for (Token token : tokens) {
 
                 System.out.println(token);
-
         }
+
+
         System.out.println(lexer.buffer);
         System.out.println(lexer.builder.toString());
         // here is where you'll call getAllTokens
 
     }
 }
+
 
 
 	

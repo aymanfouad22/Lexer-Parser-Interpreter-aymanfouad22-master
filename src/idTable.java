@@ -2,14 +2,14 @@ import java.util.HashMap;
 
 public class idTable {
     private HashMap<String, Integer> idMap;
-    private int adressCount;
+    private int adresseCount;
    public idTable() {
        idMap = new HashMap<>();
-       adressCount = 0;
+       adresseCount = 0;
    }
    public void add(String id){
        if(!idMap.containsKey(id)){
-           idMap.put(id, adressCount++);
+           idMap.put(id, adresseCount++);
        }
    }
    public int getAdresse(String id){
