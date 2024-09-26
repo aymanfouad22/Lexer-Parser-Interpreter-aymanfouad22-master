@@ -79,5 +79,7 @@ public class Parser {
     }
     public String toString() {
         return "Tokens: " + tokens.toString() + "\nIdentifiers: " + idTable.toString();
+
     }
+
 }

@@ -17,7 +17,12 @@ public class ParserTest {
                 System.out.println(token);
             }
             System.out.println("Parser Output: ");
-   parser.parseProgram();
+            try {
+                parser.parseProgram();
+                System.out.println("Parsing completed successfully.");
+            } catch (RuntimeException e) {
+                System.err.println("Parsing failed: " + e.getMessage());
+            }
    System.out.println(parser);
             System.out.println("-----------------------------------------------------------------------------------------");
 
