@@ -27,7 +27,7 @@ public class Lexer {
     public static final String EOFTOKEN="EOF";
     Token token = new Token(" "," ",1);
     public String fileName;
-    private int currentLine = 1;
+    public static int currentLine = 1;
     /**
      * call getInput to get the file data into our buffer
      * @param fileName the file we open
@@ -131,8 +131,11 @@ private Token getInteger() {
             currentLine++;
             nextToken = getNextToken();
 
+
         }
+
 tokens.add(new Token(EOFTOKEN,"-",currentLine));
+        currentLine = 0;
 
 
 

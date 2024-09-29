@@ -12,7 +12,7 @@ public class ParserTest {
         for (String file : fileArray) {
             System.out.println(file);
             Lexer lexer =new Lexer(file);
-   Parser parser = new Parser(lexer);
+            Parser parser = new Parser(lexer);
             for (Token token : lexer.getAllTokens()) {
                 System.out.println(token);
             }
@@ -23,7 +23,7 @@ public class ParserTest {
             } catch (RuntimeException e) {
                 System.err.println("Parsing failed: " + e.getMessage());
             }
-   System.out.println(parser);
+            System.out.println(parser);
             System.out.println("-----------------------------------------------------------------------------------------");
 
         }
