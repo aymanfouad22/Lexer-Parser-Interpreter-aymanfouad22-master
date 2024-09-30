@@ -6,6 +6,7 @@ public class Parser {
     //TODO implement Parser class here
     private static ArrayList<Token> tokens = new ArrayList<>();
     private final idTable idTable;
+    private final Intrepreter intrepreter;
     private final ArrayList<Integer> byteCode;
     private int idIndex = 0;
     int index;
@@ -14,6 +15,7 @@ public class Parser {
         this.idTable = new idTable();
         this.index = 0;
         this.byteCode = new ArrayList<>();
+        this.intrepreter = new Intrepreter();
     }
     public void parseProgram(){
         while (index<tokens.size()){
@@ -30,6 +32,8 @@ public class Parser {
         parseId();
         parseAssignOp();
         parseExpression();
+        byteCode.add(2);
+        byteCode.add(idIndex);
 
     }
 
@@ -46,6 +50,7 @@ public class Parser {
             error("Expecting identifier");
         }
         idTable.add(tokens.get(index).value);
+        idIndex= idTable.getAdresse(tokens.get(index).value);
         nextToken();
     }
     //got to be an id or int and then loop to see if there + or id or int
@@ -66,17 +71,11 @@ public class Parser {
 
                 byteCode.add(1);
                 byteCode.add(Integer.valueOf(tokens.get(index).value));
-                byteCode.add(2);
-                byteCode.add(idIndex);
-                idIndex++;
             }else{
                 if(idTable.getAdresse(tokens.get(index).value)==-1){
                     idTable.add(tokens.get(index).value);
-                    idIndex++;
                 }
                 byteCode.add(0);
-                byteCode.add(idTable.getAdresse(tokens.get(index).value));
-                byteCode.add(2);
                 byteCode.add(idTable.getAdresse(tokens.get(index).value));
             }
             nextToken(); // Valid Term, move to the next token
@@ -98,8 +97,12 @@ public class Parser {
         }
         return "unknown"; // Return a default value if index is out of bounds
     }
+    public ArrayList<Integer> getBytecode(){
+        return byteCode;
+    }
     public String toString() {
-        return "Tokens: " + tokens.toString() + "\nIdentifiers: " + idTable.toString()+"\nBytecode: "+byteCode.toString();
+        return "Tokens: " + tokens.toString() + "\nIdentifiers: " + idTable.toString()+"\nBytecode: "+byteCode.toString()
+                +"\nMemory: "+intrepreter.toString() +"\nBytecode: "+getBytecode().toString();
 
     }
 
