@@ -25,6 +25,10 @@ public class Parser {
                 break;
             }
         }
+        intrepreter.intrepreterProgram(byteCode);
+        System.out.println("Symbol Table: " + idTable);
+        System.out.println("ByteCode: " + byteCode);
+        System.out.println(intrepreter);
 
     }
     public void parseAssignment(){
@@ -49,6 +53,7 @@ public class Parser {
         if(!Objects.equals(tokens.get(index).type, Lexer.IDTOKEN)){
             error("Expecting identifier");
         }
+        //get addr from id table (-1 if int and put in table)
         idTable.add(tokens.get(index).value);
         idIndex= idTable.getAdresse(tokens.get(index).value);
         nextToken();
@@ -74,6 +79,7 @@ public class Parser {
             }else{
                 if(idTable.getAdresse(tokens.get(index).value)==-1){
                     idTable.add(tokens.get(index).value);
+                    //get address from idtable if -1 error else generate load (address of id)
                 }
                 byteCode.add(0);
                 byteCode.add(idTable.getAdresse(tokens.get(index).value));
@@ -102,7 +108,7 @@ public class Parser {
     }
     public String toString() {
         return "Tokens: " + tokens.toString() + "\nIdentifiers: " + idTable.toString()+"\nBytecode: "+byteCode.toString()
-                +"\nMemory: "+intrepreter.toString() +"\nBytecode: "+getBytecode().toString();
+                +"\nMemory: "+intrepreter.toString() ;
 
     }
 

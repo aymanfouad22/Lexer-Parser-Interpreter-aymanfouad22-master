@@ -20,21 +20,17 @@ public class ParserTest {
             Lexer lexer = new Lexer(file);
             Parser parser = new Parser(lexer);
             Intrepreter intrepreter = new Intrepreter();
-
-            for (Token token : lexer.getAllTokens()) {
-                System.out.println("Token: " + token);
-            }
             System.out.println("Parser Output: ");
             try {
                 parser.parseProgram();
-               intrepreter.interpreterProgram(parser.getBytecode());
+                intrepreter.intrepreterProgram(parser.getBytecode());
                 System.out.println("Parsing and interpretation completed successfully.");
             } catch (RuntimeException e) {
                 System.err.println("Parsing failed: " + e.getMessage());
             }
 
             System.out.println("Parser State: " + parser);
-            System.out.println(intrepreter);
+            intrepreter.toString();
 
             System.out.println("-----------------------------------------------------------------------------------------");
         }
